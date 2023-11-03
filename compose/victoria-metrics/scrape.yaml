@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'process-exporter'
+    static_configs:
+      - targets: ['localhost:9256']
+  
+  - job_name: 'quarkus-micrometer'
+    metrics_path: '/q/metrics'
+    static_configs:
+      - targets: ['localhost:8090']
+        labels:
+          application: quarkus-imperative
+  
+  - job_name: 'frameworkless-examples'
+    metrics_path: '/metrics'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['localhost:10001']
+        labels:
+          application: frameworkless-examples

@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    command: -c max_connections=600
+  
+  3rdparty:
+    build:
+      context: ./thirdparty-rest-webservices
+      dockerfile: src/main/docker/Dockerfile.jvm
+    image: 3rdparty:latest
+    ports:
+      - 8090:8080
+  
+  phlare:
+    image: grafana/phlare:latest
+    ports:
+      - 4100:4100
+
+  vmagent:
+    image: victoriametrics/vmagent:latest
+    network_mode: host
+    volumes:
+      - ./compose/victoria-metrics/scrape.yaml:/etc/prometheus/scrape.yaml
+    command:
+      - "--promscrape.config=/etc/prometheus/scrape.yaml"
+      - "--remoteWrite.url=http://localhost:8428/api/v1/write"
+    depends_on:
+      - victoriametrics
+  
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:latest
+    ports:
+      - 8428:8428
+    command:
+      - '--httpListenAddr=:8428'
+  
+  grafana:
+    image: grafana/grafana:main
+    ports:
+      - 3000:3000
+    volumes:
+      - ./compose/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./compose/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      GF_FEATURE_TOGGLES_ENABLE: "flameGraph"
+      GF_INSTALL_PLUGINS: "marcusolsson-treemap-panel"
+
+  process_exporter:
+    image: ncabatoff/process-exporter:latest
+    privileged: true
+    ports:
+      - 9256:9256
+    volumes:
+      - /proc:/host/proc:ro
+      - ./compose/process-exporter/procexporter.yaml:/config/procexporter.yaml
+    command: --procfs /host/proc --config.path /config/procexporter.yaml

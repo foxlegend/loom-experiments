@@ -1,0 +1,17 @@
+apiVersion: 1
+
+datasources:
+  - name: Phlare
+    type: phlare
+    url: http://phlare:4100
+    jsonData:
+      minStep: '15s'
+
+  - name: VictoriaMetrics
+    type: prometheus
+    access: proxy
+    url: http://victoriametrics:8428
+    uid: victoriametrics
+    isDefault: true
+    jsonData:
+      timeInterval: 1s

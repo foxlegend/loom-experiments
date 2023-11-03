@@ -1,0 +1,7 @@
+# process-exporter configuration file
+process_names:
+  - name: "{{.Comm}}:{{.Matches.JavaJar}}"
+    exe:
+    - 'java'
+    cmdline:
+    - .+-jar\s+(?P<JavaJar>[^\s]+).*
