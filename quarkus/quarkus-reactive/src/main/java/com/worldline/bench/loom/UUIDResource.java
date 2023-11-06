@@ -1,7 +1,5 @@
 package com.worldline.bench.loom;
 
-import java.time.Duration;
-
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import com.worldline.bench.loom.client.ThirdPartySleepServiceClient;
@@ -10,7 +8,6 @@ import com.worldline.bench.loom.repository.UUIDRepository;
 
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.logging.Log;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DefaultValue;
@@ -41,12 +38,6 @@ public class UUIDResource {
     ) {
         Log.debugv("UUID - reactive: wsCount={0}, wsSleep={1}, dbCount={2}, dbSleep={3} [{4}]",
                 wsCount, wsSleep, dbCount, dbSleep, Thread.currentThread());
-        /*Multi<UUID> ws = Multi.createFrom().range(0, wsCount)
-            .onItem().transformToUniAndConcatenate(i -> client.timed(wsSleep))
-            .onItem().transform(i -> new UUID());
-        Multi<UUID> db = Multi.createFrom().range(0, dbCount)
-            .onItem().transformToUniAndConcatenate(i -> repository.generateRandomUUID(dbSleep));*/
-
         var uni = Uni.createFrom().item(new UUID());
         for (int i = 0; i < Math.max(wsCount, dbCount); i++) {
             if (i < wsCount) {
@@ -60,6 +51,5 @@ public class UUIDResource {
         final var finalUni = uni;
 
         return Panache.withSession(() -> finalUni);
-        // return Multi.createBy().concatenating().streams(ws, db).collect().last();
     }
 }
