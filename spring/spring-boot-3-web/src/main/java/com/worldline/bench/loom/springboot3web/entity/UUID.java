@@ -11,8 +11,8 @@ import jakarta.persistence.Id;
 public class UUID {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
 
     @Column
-    private String uuid;
+    public String uuid;
 }
