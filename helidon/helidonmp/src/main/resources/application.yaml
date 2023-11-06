@@ -1,0 +1,10 @@
+javax:
+  sql:
+    DataSource:
+      main:
+        dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
+        dataSource:
+          url: jdbc:postgresql://localhost:5432/postgres
+          user: postgres
+          password: postgres
+        maximumPoolSize: 500
