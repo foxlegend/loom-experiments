@@ -12,7 +12,7 @@ import jakarta.ws.rs.QueryParam;
 
 @Path("/cpu")
 public class CPURestResource {
-    
+
     @GET
     @Path("/platform")
     public Long platformThreads(@QueryParam("duration") @DefaultValue("300") long duration) {
@@ -31,7 +31,7 @@ public class CPURestResource {
     private Long cpuComputations(long duration) {
         Long loopCount = 0L;
         LocalDateTime start = LocalDateTime.now();
-        while(Duration.between(start, LocalDateTime.now()).toMillis() < duration) {
+        while (Duration.between(start, LocalDateTime.now()).toMillis() < duration) {
             loopCount++;
         }
         return loopCount;

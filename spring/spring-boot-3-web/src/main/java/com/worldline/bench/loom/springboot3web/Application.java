@@ -32,6 +32,9 @@ public class Application {
 	@Value("${thirdparty-sleep-service.maxConnections:500}")
 	private int maxConnections;
 
+	@Value("${thirdparty.sleep.service.url:http\\://localhost\\:8090}")
+	private String url;
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
@@ -58,7 +61,7 @@ public class Application {
 		var connector = new ReactorClientHttpConnector(httpClient);
 		WebClient client = WebClient.builder()
 				.clientConnector(connector)
-				.baseUrl("http://localhost:8090")
+				.baseUrl(url)
 				.build();
 
 		HttpServiceProxyFactory factory = HttpServiceProxyFactory
