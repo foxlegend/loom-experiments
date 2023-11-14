@@ -7,4 +7,4 @@ javax:
           url: jdbc:postgresql://localhost:5432/postgres
           user: postgres
           password: postgres
-        maximumPoolSize: 500
+#        maximumPoolSize: 500

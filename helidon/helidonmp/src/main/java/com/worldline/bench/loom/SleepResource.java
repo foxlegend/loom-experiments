@@ -27,6 +27,9 @@ public class SleepResource {
     private Long sleep(long duration) throws InterruptedException {
         var start = LocalDateTime.now();
         Thread.sleep(duration);
-        return Duration.between(start, LocalDateTime.now()).toMillis();
+        return Duration.between(
+                start, 
+                LocalDateTime.now()
+            ).toMillis();
     }
 }
